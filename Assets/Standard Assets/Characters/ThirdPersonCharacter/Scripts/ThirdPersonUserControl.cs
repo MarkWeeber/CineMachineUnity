@@ -12,6 +12,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
+        [SerializeField]
+        private bool userInputEnabled = true;
 
         
         private void Start()
@@ -35,7 +37,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         private void Update()
         {
-            if (!m_Jump)
+            if (!m_Jump && userInputEnabled)
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             }
@@ -67,9 +69,20 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	        if (Input.GetKey(KeyCode.LeftShift)) m_Move *= 0.5f;
 #endif
 
+            if(!userInputEnabled)
+                m_Move = Vector3.zero;
             // pass all parameters to the character control script
             m_Character.Move(m_Move, crouch, m_Jump);
             m_Jump = false;
+        }
+        public void DisableUserInpit()
+        {
+            userInputEnabled = false;
+        }
+
+        public void EnabeUserInpit()
+        {
+            userInputEnabled = true;
         }
     }
 }
